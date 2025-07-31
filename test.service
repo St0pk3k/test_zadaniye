@@ -1,0 +1,7 @@
+[Unit]
+Description=script for test
+Wants=test.timer
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/test.sh
