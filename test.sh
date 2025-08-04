@@ -6,7 +6,7 @@ pids="/var/run/test.pid"
 
 pid=$(pgrep -x test)
 
-if [[ -z "$PID" ]]; then
+if [[ -z "$pid" ]]; then
     exit 0
 fi
 
