@@ -1,7 +1,7 @@
 [Unit]
-Description=script for test
-Wants=test.timer
+Description=Monitor process "test"
+After=network.target
 
 [Service]
 Type=oneshot
-ExecStart=/usr/local/bin/test.sh
+ExecStart=/usr/local/bin/monitor_test.sh
