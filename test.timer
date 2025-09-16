@@ -1,5 +1,5 @@
 [Unit]
-Description=timer every minute
+Description=Run test.sh every minute
 
 [Timer]
 OnBootSec=1min
