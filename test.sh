@@ -1,26 +1,27 @@
 #!/bin/bash
+set -euo pipefail
 
-logs="/var/log/monitoring.log"
+PROCESS_NAME="test"
+STATE_FILE="/var/run/${PROCESS_NAME}.pid"
+LOG_TAG="monitor_test"
+MONITOR_URL="https://test.com/monitoring/test/api"
 
-pids="/var/run/test.pid"
+timestamp() {
+  date +"%Y-%m-%d %H:%M:%S"
+}
 
-pid=$(pgrep -x test)
+pid=$(pgrep -x "$PROCESS_NAME" || true)
 
-if [[ -z "$pid" ]]; then
-    exit 0
-fi
-
-if [[ ! -f "$pids" ]]; then
-    echo "$pid" > "$pids"
-else
-    old_pid=$(cat "$pids")
+if [[ -n "$pid" ]]; then
+  if [[ -f "$STATE_FILE" ]]; then
+    old_pid=$(cat "$STATE_FILE")
     if [[ "$pid" != "$old_pid" ]]; then
-        echo "$(date '+%Y-%m-%d %H:%M:%S') — процесс перезапущен (pid изменился: $old_pid → $pid)" >> "$logs"
-        echo "$pid" > "$pids"
+      logger -t "$LOG_TAG" "$(timestamp) Процесс $PROCESS_NAME перезапущен (PID $old_pid -> $pid)"
     fi
-fi
+  fi
+  echo "$pid" > "$STATE_FILE"
 
-curl -s --head --connect-timeout 5 https://test.com/monitoring/test/api > /dev/null
-if [[ $? -ne 0 ]]; then
-    echo "$(date '+%Y-%m-%d %H:%M:%S') — сервер недоступен" >> "$logs"
+  if ! curl -fsS -m 5 "$MONITOR_URL" >/dev/null 2>&1; then
+    logger -t "$LOG_TAG" "$(timestamp) Сервер мониторинга недоступен"
+  fi
 fi
