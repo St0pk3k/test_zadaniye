@@ -1,9 +1,1 @@
-Как запустить скрипт:
-bash
-sudo cp test.sh /usr/local/bin/test.sh
-sudo chmod +x /usr/local/bin/test.sh
-sudo cp test.service /etc/systemd/system/
-sudo cp test.timer /etc/systemd/system/
-sudo systemctl daemon-reexec
-sudo systemctl enable test.timer
-sudo systemctl start test.timer
+Как запустить скрипт: sudo cp test.sh /usr/local/bin/test.sh sudo chmod +x /usr/local/bin/test.sh sudo cp test.service /etc/systemd/system/ sudo cp test.timer /etc/systemd/system/ sudo systemctl daemon-reexec sudo systemctl enable test.timer sudo systemctl start test.timer
